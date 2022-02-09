@@ -1,11 +1,18 @@
-export default function Dropdown() {
+export default function Dropdown(props) {
+  console.log(props);
+
+  const dropdownPosition = {
+    top: props.top + "px",
+    left: props.left + 10 + "px",
+  };
+
   return (
-    <div className="dropdown">
+    <div className="dropdown" style={dropdownPosition}>
       <ul>
-        <li>Sam Vimes</li>
-        <li>Death of Rats</li>
-        <li>Archchancellor Ridcully</li>
-        <li>Igor</li>
+        <li onClick={() => props.handler("samVimes")}>Sam Vimes</li>
+        <li onClick={() => props.handler("deathOfRats")}>Death of Rats</li>
+        <li onClick={() => props.handler("ridcully")}>Ridcully</li>
+        <li onClick={() => props.handler("igor")}>Igor</li>
       </ul>
     </div>
   );
