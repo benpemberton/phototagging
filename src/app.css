@@ -27,3 +27,12 @@ li:hover {
   background-color: rgb(185, 160, 129);
   cursor: pointer;
 }
+
+.marker {
+  position: absolute;
+}
+
+li.inactive {
+  pointer-events: none;
+  color: rgb(151, 151, 151);
+}
