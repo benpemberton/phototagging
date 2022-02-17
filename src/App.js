@@ -16,11 +16,12 @@ import { useEffect, useState } from "react";
 import "./app.css";
 import uniqid from "uniqid";
 import Score from "./Score";
+import ScoreModal from "./ScoreModal";
 
 const app = initializeApp(getFirebaseConfig());
 const db = getFirestore(app);
 
-async function getPositions(name) {
+async function getPosition(name) {
   const colRef = collection(db, "characterPositions");
   const docs = await getDocs(colRef);
 
@@ -35,8 +36,6 @@ async function getPositions(name) {
   return character;
 }
 
-getPositions();
-
 function App() {
   const [listOpen, setListOpen] = useState(false);
   const [mousePos, setMousePos] = useState(null);
@@ -44,6 +43,9 @@ function App() {
   const [markers, setMarkers] = useState([]);
   const [userID, setUserID] = useState(null);
   const [score, setScore] = useState(null);
+  const [scoreModal, setScoreModal] = useState(false);
+  const [leaderModal, setLeaderModal] = useState(false);
+  const [topTenScores, setTopTenScores] = useState(null);
 
   useEffect(() => {
     cleanUserList();
@@ -57,15 +59,81 @@ function App() {
   useEffect(() => {
     if (markers.length === 4) {
       setUserTime();
-      checkForHighScore();
     }
   }, [markers]);
 
-  function setStartTime() {
-    const colRef = collection(db, "users");
+  useEffect(() => {
+    if (score) {
+      checkTopTen();
+    }
+  }, [score]);
+
+  async function checkTopTen() {
+    const colRef = collection(db, "topTen");
+    const topTen = await getDocs(colRef);
+
+    let topTenArray = [];
+
+    topTen.forEach((user) => {
+      topTenArray.push(user.data());
+    });
+
+    topTenArray.sort((a, b) => {
+      return a.score - b.score;
+    });
+
+    setTopTenScores(topTenArray);
+
+    if (
+      topTenArray.length < 10 ||
+      Number(score) < Number(topTenArray[9].score)
+    ) {
+      setScoreModal(true);
+    }
+    return;
+  }
+
+  async function updateTopTen(name) {
+    const colRef = collection(db, "topTen");
+    const topTen = await getDocs(colRef);
+
+    const newArray = topTenScores;
+
+    newArray.push({
+      score: score,
+      name: name,
+    });
+
+    newArray.sort((a, b) => {
+      return a.score - b.score;
+    });
+
+    console.log(newArray.length);
+
+    if (newArray.length > 10) {
+      topTen.forEach((user) => {
+        console.log(user);
+        if (user.data().score === newArray[newArray.length - 1].score) {
+          console.log(user.id);
+          deleteDoc(doc(db, "topTen", user.id));
+        }
+      });
+    }
+
     addDoc(colRef, {
+      score: score,
+      name: name,
+    });
+  }
+
+  async function setStartTime() {
+    const colRef = collection(db, "users");
+
+    const userRef = await addDoc(colRef, {
       start: Date.now(),
-    }).then((doc) => setUserID(doc.id));
+    });
+
+    setUserID(userRef.id);
   }
 
   async function setUserTime() {
@@ -94,7 +162,10 @@ function App() {
     return (Math.round(difference) / 1000).toFixed(2);
   }
 
-  async function checkForHighScore() {}
+  // async function endOfGameChecks() {
+  //   await setUserTime();
+  //   await checkTopTen();
+  // }
 
   async function cleanUserList() {
     const colRef = collection(db, "users");
@@ -112,6 +183,8 @@ function App() {
       deleteDoc(doc(db, "users", id));
     });
   }
+
+  function openModal() {}
 
   function handleClick(e) {
     setListOpen(!listOpen);
@@ -136,7 +209,7 @@ function App() {
       left: mousePos.left - imgPos.left,
     };
 
-    const character = await getPositions(dbName);
+    const character = await getPosition(dbName);
 
     if (
       relMousePos.top > character.yLower &&
@@ -154,6 +227,10 @@ function App() {
         },
       ]);
     }
+  }
+
+  function submitBtnClick(name) {
+    updateTopTen(name);
   }
 
   return (
@@ -183,8 +260,9 @@ function App() {
         <h2>View leaderboard</h2>
         <button>Show</button>
       </div>
+      {scoreModal && <ScoreModal score={score} handler={submitBtnClick} />}
     </div>
   );
 }
 
-export default App;
+export { App, checkTopTen };
