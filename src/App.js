@@ -17,24 +17,19 @@ import "./app.css";
 import uniqid from "uniqid";
 import Score from "./Score";
 import ScoreModal from "./ScoreModal";
+import {
+  setStartTime,
+  cleanUserList,
+  setEndTime,
+  setUserScore,
+  getUser,
+  isInTopTen,
+  updateTopTen,
+  getPosition,
+} from "./firestoreCalls";
 
 const app = initializeApp(getFirebaseConfig());
 const db = getFirestore(app);
-
-async function getPosition(name) {
-  const colRef = collection(db, "characterPositions");
-  const docs = await getDocs(colRef);
-
-  let character;
-
-  docs.forEach((doc) => {
-    if (doc.id === name) {
-      character = doc.data();
-    }
-  });
-
-  return character;
-}
 
 function App() {
   const [listOpen, setListOpen] = useState(false);
@@ -48,8 +43,7 @@ function App() {
   const [topTenScores, setTopTenScores] = useState(null);
 
   useEffect(() => {
-    cleanUserList();
-    setStartTime();
+    startOfGame();
   }, []);
 
   useEffect(() => {
@@ -58,133 +52,50 @@ function App() {
 
   useEffect(() => {
     if (markers.length === 4) {
-      setUserTime();
+      endOfGame();
     }
   }, [markers]);
 
   useEffect(() => {
     if (score) {
-      checkTopTen();
+      topTenChecks();
     }
   }, [score]);
 
-  async function checkTopTen() {
-    const colRef = collection(db, "topTen");
-    const topTen = await getDocs(colRef);
-
-    let topTenArray = [];
-
-    topTen.forEach((user) => {
-      topTenArray.push(user.data());
-    });
-
-    topTenArray.sort((a, b) => {
-      return a.score - b.score;
-    });
-
-    setTopTenScores(topTenArray);
-
-    if (
-      topTenArray.length < 10 ||
-      Number(score) < Number(topTenArray[9].score)
-    ) {
-      setScoreModal(true);
-    }
-    return;
+  async function startOfGame() {
+    await cleanUserList();
+    const id = await setStartTime();
+    setUserID(id);
   }
 
-  async function updateTopTen(name) {
-    const colRef = collection(db, "topTen");
-    const topTen = await getDocs(colRef);
-
-    const newArray = topTenScores;
-
-    newArray.push({
-      score: score,
-      name: name,
-    });
-
-    newArray.sort((a, b) => {
-      return a.score - b.score;
-    });
-
-    console.log(newArray.length);
-
-    if (newArray.length > 10) {
-      topTen.forEach((user) => {
-        console.log(user);
-        if (user.data().score === newArray[newArray.length - 1].score) {
-          console.log(user.id);
-          deleteDoc(doc(db, "topTen", user.id));
-        }
-      });
-    }
-
-    addDoc(colRef, {
-      score: score,
-      name: name,
-    });
-  }
-
-  async function setStartTime() {
-    const colRef = collection(db, "users");
-
-    const userRef = await addDoc(colRef, {
-      start: Date.now(),
-    });
-
-    setUserID(userRef.id);
-  }
-
-  async function setUserTime() {
+  async function endOfGame() {
     const docRef = doc(db, "users", userID);
 
-    await updateDoc(docRef, {
-      end: Date.now(),
-    });
+    await setEndTime(docRef);
 
-    const time = await calculateTime(docRef);
+    const user = await getUser(docRef);
 
-    await updateDoc(docRef, {
-      score: time,
-    });
+    const time = await calculateTime(user);
+
+    setUserScore(docRef, time);
 
     setScore(time);
   }
 
-  async function calculateTime(ref) {
-    const docSnap = await getDoc(ref);
+  async function topTenChecks() {
+    const topTen = await isInTopTen(score);
+    console.log(topTen);
+    if (topTen) {
+      setTopTenScores(topTen);
+      setScoreModal(true);
+    }
+  }
 
-    const user = docSnap.data();
-
+  async function calculateTime(user) {
     const difference = user.end - user.start;
 
     return (Math.round(difference) / 1000).toFixed(2);
   }
-
-  // async function endOfGameChecks() {
-  //   await setUserTime();
-  //   await checkTopTen();
-  // }
-
-  async function cleanUserList() {
-    const colRef = collection(db, "users");
-    const users = await getDocs(colRef);
-
-    let deleteList = [];
-
-    users.forEach((user) => {
-      if (Object.keys(user.data()).length < 3) {
-        deleteList.push(user.id);
-      }
-    });
-
-    deleteList.forEach((id) => {
-      deleteDoc(doc(db, "users", id));
-    });
-  }
-
-  function openModal() {}
 
   function handleClick(e) {
     setListOpen(!listOpen);
@@ -230,7 +141,7 @@ function App() {
   }
 
   function submitBtnClick(name) {
-    updateTopTen(name);
+    updateTopTen(name, score, topTenScores);
   }
 
   return (
@@ -265,4 +176,4 @@ function App() {
   );
 }
 
-export { App, checkTopTen };
+export default App;
