@@ -1,6 +1,4 @@
 export default function Dropdown(props) {
-  console.log(props);
-
   const dropdownPosition = {
     top: props.top + "px",
     left: props.left + 10 + "px",
