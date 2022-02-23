@@ -59,10 +59,14 @@ async function getUser(ref) {
   return docSnap.data();
 }
 
-async function isInTopTen(score) {
+async function getTopTen() {
   const colRef = collection(db, "topTen");
-  const topTen = await getDocs(colRef);
+  const dbTopTen = await getDocs(colRef);
 
+  return dbTopTen;
+}
+
+async function createArray(topTen) {
   let topTenArray = [];
 
   topTen.forEach((user) => {
@@ -73,40 +77,47 @@ async function isInTopTen(score) {
     return a.score - b.score;
   });
 
+  return topTenArray;
+}
+
+async function isInTopTen(score) {
+  const dbTopTen = await getTopTen();
+  let topTenArray = await createArray(dbTopTen);
+
   if (topTenArray.length < 10 || Number(score) < Number(topTenArray[9].score)) {
-    return topTenArray;
+    return true;
   } else return false;
 }
 
-async function updateTopTen(name, score, topTenScores) {
-  const colRef = collection(db, "topTen");
-  const topTen = await getDocs(colRef);
+async function updateTopTen(name, score) {
+  const dbTopTen = await getTopTen();
+  let topTenArray = await createArray(dbTopTen);
 
-  const newArray = topTenScores;
-
-  newArray.push({
+  topTenArray.push({
     score: score,
     name: name,
   });
 
-  newArray.sort((a, b) => {
+  topTenArray.sort((a, b) => {
     return a.score - b.score;
   });
 
-  if (newArray.length > 10) {
-    topTen.forEach((user) => {
-      console.log(user);
-      if (user.data().score === newArray[newArray.length - 1].score) {
-        console.log(user.id);
+  if (topTenArray.length > 10) {
+    dbTopTen.forEach((user) => {
+      if (user.data().score === topTenArray[topTenArray.length - 1].score) {
         deleteDoc(doc(db, "topTen", user.id));
       }
     });
   }
 
-  addDoc(colRef, {
+  addDoc(collection(db, "topTen"), {
     score: score,
     name: name,
   });
+
+  topTenArray.pop();
+
+  return topTenArray;
 }
 
 async function getPosition(name) {
@@ -130,6 +141,8 @@ export {
   setEndTime,
   setUserScore,
   getUser,
+  getTopTen,
+  createArray,
   isInTopTen,
   updateTopTen,
   getPosition,

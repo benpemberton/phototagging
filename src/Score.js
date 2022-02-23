@@ -1,9 +1,7 @@
 export default function Score(props) {
-  if (props.time) {
-    return (
-      <div className="time">
-        <p>Your time was: {props.time} seconds</p>
-      </div>
-    );
-  } else return null;
+  return (
+    <div className="score">
+      <p>Score: {props.time ? props.time + "s" : null} </p>
+    </div>
+  );
 }

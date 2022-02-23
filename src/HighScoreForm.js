@@ -1,8 +1,4 @@
 export default function ScoreModal(props) {
-  function getName() {
-    const input = document.querySelector(".name-input");
-  }
-
   function handleClick(e) {
     e.preventDefault();
     const input = document.querySelector(".name-input");
@@ -14,7 +10,7 @@ export default function ScoreModal(props) {
   }
 
   return (
-    <div className="score-modal">
+    <div className="high-score-form">
       <h3>You made the top ten!</h3>
       <p>Your time was {props.score} seconds.</p>
       <form>

@@ -1,28 +1,24 @@
 import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  doc,
-  updateDoc,
-  getDoc,
-  deleteDoc,
-} from "firebase/firestore/lite";
+import { getFirestore, doc } from "firebase/firestore/lite";
 import discworldImage from "./discworld-characters.jpg";
 import Dropdown from "./Dropdown";
 import { useEffect, useState } from "react";
 import "./app.css";
 import uniqid from "uniqid";
 import Score from "./Score";
-import ScoreModal from "./ScoreModal";
+import ShowLeaderboard from "./ShowLeaderboard";
+import BackgroundModal from "./BackgroundModal";
+import HighScoreForm from "./HighScoreForm";
+import LeaderModal from "./LeaderModal";
 import {
   setStartTime,
   cleanUserList,
   setEndTime,
   setUserScore,
   getUser,
+  getTopTen,
+  createArray,
   isInTopTen,
   updateTopTen,
   getPosition,
@@ -38,17 +34,13 @@ function App() {
   const [markers, setMarkers] = useState([]);
   const [userID, setUserID] = useState(null);
   const [score, setScore] = useState(null);
-  const [scoreModal, setScoreModal] = useState(false);
+  const [highScoreForm, setHighScoreForm] = useState(false);
   const [leaderModal, setLeaderModal] = useState(false);
   const [topTenScores, setTopTenScores] = useState(null);
 
   useEffect(() => {
     startOfGame();
   }, []);
-
-  useEffect(() => {
-    console.log(userID);
-  }, [userID]);
 
   useEffect(() => {
     if (markers.length === 4) {
@@ -66,6 +58,9 @@ function App() {
     await cleanUserList();
     const id = await setStartTime();
     setUserID(id);
+    const dbTopTen = await getTopTen();
+    const topTenArray = await createArray(dbTopTen);
+    setTopTenScores(topTenArray);
   }
 
   async function endOfGame() {
@@ -84,10 +79,8 @@ function App() {
 
   async function topTenChecks() {
     const topTen = await isInTopTen(score);
-    console.log(topTen);
     if (topTen) {
-      setTopTenScores(topTen);
-      setScoreModal(true);
+      setHighScoreForm(true);
     }
   }
 
@@ -97,7 +90,7 @@ function App() {
     return (Math.round(difference) / 1000).toFixed(2);
   }
 
-  function handleClick(e) {
+  function handleImgClick(e) {
     setListOpen(!listOpen);
     setMousePos({ top: e.pageY, left: e.pageX });
 
@@ -114,7 +107,7 @@ function App() {
     }
   }
 
-  async function handleLi(dbName, normalName) {
+  async function handleLiClick(dbName, normalName) {
     const relMousePos = {
       top: mousePos.top - imgPos.top,
       left: mousePos.left - imgPos.left,
@@ -140,8 +133,15 @@ function App() {
     }
   }
 
-  function submitBtnClick(name) {
-    updateTopTen(name, score, topTenScores);
+  async function submitBtnClick(name) {
+    const topTen = await updateTopTen(name, score);
+    setTopTenScores(topTen);
+    setHighScoreForm(false);
+    setLeaderModal(true);
+  }
+
+  function closeLeaderModal() {
+    setLeaderModal(false);
   }
 
   return (
@@ -149,29 +149,50 @@ function App() {
       <div className="header">
         <h1>Discworld Characters</h1>
       </div>
-      <Score time={score} />
-      <div className="image-container">
-        <img src={discworldImage} onClick={handleClick} />
-        {listOpen && (
-          <Dropdown {...mousePos} handler={handleLi} markers={markers} />
-        )}
-        {markers.map((marker) => {
-          return (
-            <p
-              key={uniqid()}
-              className="marker"
-              style={{ top: marker.top, left: marker.left }}
-            >
-              {marker.normalName}
+      <div className="game-wrap">
+        <div className="image-container">
+          <div className="info">
+            <p className="instructions">
+              Find and select the four Discworld characters in the fastest
+              possible time
             </p>
-          );
-        })}
+            <Score time={score} />
+          </div>
+
+          <img
+            src={discworldImage}
+            alt="A crowd of Discworld characters"
+            onClick={handleImgClick}
+          />
+          {listOpen && (
+            <Dropdown {...mousePos} handler={handleLiClick} markers={markers} />
+          )}
+          {markers.map((marker) => {
+            return (
+              <p
+                key={uniqid()}
+                className="marker"
+                style={{ top: marker.top, left: marker.left }}
+              >
+                {marker.normalName}
+              </p>
+            );
+          })}
+        </div>
       </div>
-      <div className="leaderboard-cta">
-        <h2>View leaderboard</h2>
-        <button>Show</button>
+      <div className="scores-area">
+        <div className="scores-area-inner">
+          {highScoreForm ? (
+            <HighScoreForm score={score} handler={submitBtnClick} />
+          ) : (
+            <ShowLeaderboard handler={() => setLeaderModal(true)} />
+          )}
+        </div>
       </div>
-      {scoreModal && <ScoreModal score={score} handler={submitBtnClick} />}
+      {leaderModal && <BackgroundModal handler={closeLeaderModal} />}
+      {leaderModal && (
+        <LeaderModal users={topTenScores} handler={closeLeaderModal} />
+      )}
     </div>
   );
 }
