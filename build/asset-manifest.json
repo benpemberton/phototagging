@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.11d13b42.css",
+    "main.js": "/static/js/main.9299f0b0.js",
+    "static/media/discworld-characters.jpg": "/static/media/discworld-characters.1539d903f01b0f7aa38e.jpg",
+    "index.html": "/index.html",
+    "main.11d13b42.css.map": "/static/css/main.11d13b42.css.map",
+    "main.9299f0b0.js.map": "/static/js/main.9299f0b0.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.11d13b42.css",
+    "static/js/main.9299f0b0.js"
+  ]
+}
