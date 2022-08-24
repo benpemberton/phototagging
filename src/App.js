@@ -34,7 +34,6 @@ const App = () => {
   }, [startCounter]);
 
   useEffect(() => {
-    console.log(counter);
   }, [counter]);
 
   const firebaseSignIn = async () => {
@@ -42,14 +41,15 @@ const App = () => {
     signInAnonymously(auth).catch((err) => console.log(err));
 
     onAuthStateChanged(auth, (user) => {
-      if (!user) console.log("Firebase: no user signed in");
-      setIsSignedIn(true);
-      setUser((prevUser) => {
-        return {
-          ...prevUser,
-          uid: user.uid,
-        };
-      });
+      if (user) {
+        setIsSignedIn(true);
+        setUser((prevUser) => {
+          return {
+            ...prevUser,
+            uid: user.uid,
+          };
+        });
+      } else console.log("Firebase: no user signed in");
     });
   };
 
@@ -61,7 +61,7 @@ const App = () => {
     <div className="wrap">
       <Header counter={counter} />
       {startGame ? (
-        <Game toggleCounter={toggleCounter} db={db} />
+        <Game db={db} toggleCounter={toggleCounter} counter={counter} />
       ) : (
         <StartScreen
           handleStartButton={() => setStartGame(true)}

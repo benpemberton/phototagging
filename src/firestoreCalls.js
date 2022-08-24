@@ -9,19 +9,36 @@ import {
 } from "firebase/firestore/lite";
 
 async function cleanUserList(db) {
+  try {
   const users = await getDocs(collection(db, "users"));
 
   let deleteList = [];
 
   users.forEach((user) => {
-    if (Object.keys(user.data()).length < 3) {
       deleteList.push(user.id);
-    }
   });
 
   deleteList.forEach((id) => {
     deleteDoc(doc(db, "users", id));
   });
+} catch (err) {
+  console.log(err)
+}
+}
+
+const createUserEntry = async (score, db) => {
+  try {
+    const colRef = collection(db, "users");
+
+    const userRef = await addDoc(colRef, {
+      score
+    });
+
+    return userRef.id;
+
+  } catch (err) {
+    throw new Error(err.message);
+  }
 }
 
 async function setStartTime(db) {
@@ -143,4 +160,5 @@ export {
   isInTopTen,
   updateTopTen,
   getPosition,
+  createUserEntry
 };

@@ -5,6 +5,7 @@ import HighScoreForm from "./HighScoreForm";
 import LeaderModal from "./LeaderModal";
 import discworldImage from "./discworld-characters.jpg";
 import Dropdown from "./Dropdown";
+import { msToMinsSecsAndMs } from "./convertTime";
 import {
   setStartTime,
   cleanUserList,
@@ -16,9 +17,10 @@ import {
   isInTopTen,
   updateTopTen,
   getPosition,
+  createUserEntry
 } from "./firestoreCalls";
 
-const Game = ({ db, toggleCounter }) => {
+const Game = ({ db, toggleCounter, counter }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [mousePos, setMousePos] = useState(null);
   const [imgPos, setImgPos] = useState(null);
@@ -30,7 +32,11 @@ const Game = ({ db, toggleCounter }) => {
   const [topTenScores, setTopTenScores] = useState(null);
 
   useLayoutEffect(() => {
-    toggleCounter();
+    startOfGame();
+
+    window.addEventListener('resize', getImgPosition);
+
+    return () => window.removeEventListener('resize', getImgPosition);
   }, []);
 
   useEffect(() => {
@@ -41,35 +47,27 @@ const Game = ({ db, toggleCounter }) => {
 
   useEffect(() => {
     if (score) {
-      topTenChecks();
+      endOfGameTasks();
     }
   }, [score]);
 
-  async function startOfGame() {
-    try {
-      await cleanUserList(db);
-      const id = await setStartTime(db);
-      setUserID(id);
-      const dbTopTen = await getTopTen(db);
-      const topTenArray = await createArray(dbTopTen);
-      setTopTenScores(topTenArray);
-    } catch (err) {
-      console.log(err);
-    }
+
+  const startOfGame = () => {
+    toggleCounter();
+    getImgPosition();
   }
 
-  async function endOfGame() {
-    const docRef = doc(db, "users", userID);
+  const endOfGame = () => {
+    toggleCounter();
+    setScore(counter);
+  }
 
-    await setEndTime(docRef);
+  const endOfGameTasks = async () => {
+    await createUserEntry(score, db).then(id => {
+      setUserID(id);
+    }).catch((err) => console.log(err));
 
-    const user = await getUser(docRef);
-
-    const time = await calculateTime(user);
-
-    setUserScore(docRef, time);
-
-    setScore(time);
+    topTenChecks();
   }
 
   async function topTenChecks() {
@@ -85,6 +83,12 @@ const Game = ({ db, toggleCounter }) => {
     return (Math.round(difference) / 1000).toFixed(2);
   }
 
+  const getImgPosition = () => {
+    const img = document.querySelector(".image-container").querySelector("img");
+    const rect = img.getBoundingClientRect();
+    setImgPos({ top: parseInt(rect.top), left: parseInt(rect.left) });
+  }
+
   function handleDocClick() {
     if (!showDropdown) return;
     setShowDropdown(false);
@@ -93,12 +97,6 @@ const Game = ({ db, toggleCounter }) => {
   function handleImgClick(e) {
     setShowDropdown(!showDropdown);
     setMousePos({ top: e.pageY, left: e.pageX });
-
-    if (!imgPos) {
-      const img = document.querySelector("img");
-      const rect = img.getBoundingClientRect();
-      setImgPos({ top: parseInt(rect.top), left: parseInt(rect.left) });
-    }
   }
 
   async function handleLiClick(dbName, normalName) {
@@ -109,6 +107,7 @@ const Game = ({ db, toggleCounter }) => {
       };
 
       const character = await getPosition(db, dbName);
+
 
       if (
         relMousePos.top > character.yLower &&
@@ -140,6 +139,7 @@ const Game = ({ db, toggleCounter }) => {
 
   function closeLeaderModal() {
     setLeaderModal(false);
+  
   }
 
   return (

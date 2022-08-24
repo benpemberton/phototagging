@@ -8,7 +8,6 @@ const StartScreen = ({ handleStartButton, isSignedIn }) => {
         Find and select the four Discworld characters in the fastest possible
         time.
       </p>
-      <CharacterIcons />
       <button
         className="start-button"
         type="button"
