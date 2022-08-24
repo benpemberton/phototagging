@@ -3,7 +3,9 @@ import { initializeApp } from "firebase/app";
 import { getFirebaseConfig } from "./firebase-config";
 import { getFirestore, doc } from "firebase/firestore/lite";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
-import uniqid from "uniqid";
+import {
+  cleanUserList
+} from "./firestoreCalls";
 import Header from "./Header";
 import StartScreen from "./StartScreen";
 import Game from "./Game";
@@ -14,13 +16,13 @@ const db = getFirestore(app);
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
-  const [user, setUser] = useState({ id: uniqid() });
   const [startGame, setStartGame] = useState(false);
   const [counter, setCounter] = useState(0);
   const [startCounter, setStartCounter] = useState(false);
 
   useEffect(() => {
     firebaseSignIn();
+    cleanUserList(db);
   }, []);
 
   useEffect(() => {
@@ -43,13 +45,9 @@ const App = () => {
     onAuthStateChanged(auth, (user) => {
       if (user) {
         setIsSignedIn(true);
-        setUser((prevUser) => {
-          return {
-            ...prevUser,
-            uid: user.uid,
-          };
-        });
-      } else console.log("Firebase: no user signed in");
+      } else {
+        console.log("Firebase: no user signed in");
+      }
     });
   };
 

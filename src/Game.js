@@ -5,24 +5,18 @@ import HighScoreForm from "./HighScoreForm";
 import LeaderModal from "./LeaderModal";
 import discworldImage from "./discworld-characters.jpg";
 import Dropdown from "./Dropdown";
-import { msToMinsSecsAndMs } from "./convertTime";
 import {
-  setStartTime,
-  cleanUserList,
-  setEndTime,
-  setUserScore,
-  getUser,
   getTopTen,
-  createArray,
   isInTopTen,
-  updateTopTen,
   getPosition,
-  createUserEntry
+  createUserEntry,
+  updateUserEntry
 } from "./firestoreCalls";
 
 const Game = ({ db, toggleCounter, counter }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [mousePos, setMousePos] = useState(null);
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [imgPos, setImgPos] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [userID, setUserID] = useState(null);
@@ -31,7 +25,7 @@ const Game = ({ db, toggleCounter, counter }) => {
   const [leaderModal, setLeaderModal] = useState(false);
   const [topTenScores, setTopTenScores] = useState(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     startOfGame();
 
     window.addEventListener('resize', getImgPosition);
@@ -51,10 +45,10 @@ const Game = ({ db, toggleCounter, counter }) => {
     }
   }, [score]);
 
-
   const startOfGame = () => {
     toggleCounter();
-    getImgPosition();
+    const img = document.querySelector(".image-container").querySelector("img");
+    img.onload = () => getImgPosition();
   }
 
   const endOfGame = () => {
@@ -63,79 +57,100 @@ const Game = ({ db, toggleCounter, counter }) => {
   }
 
   const endOfGameTasks = async () => {
-    await createUserEntry(score, db).then(id => {
-      setUserID(id);
-    }).catch((err) => console.log(err));
+    try {
+      const userRef = await createUserEntry(score, db);
 
-    topTenChecks();
-  }
+      setUserID(userRef);
 
-  async function topTenChecks() {
-    const topTen = await isInTopTen(db, score);
-    if (topTen) {
-      setHighScoreForm(true);
+      if (await isInTopTen(db, score)) {
+        setHighScoreForm(true);
+      }
+    } catch (err) {
+      console.log(err)
     }
-  }
-
-  async function calculateTime(user) {
-    const difference = user.end - user.start;
-
-    return (Math.round(difference) / 1000).toFixed(2);
   }
 
   const getImgPosition = () => {
     const img = document.querySelector(".image-container").querySelector("img");
     const rect = img.getBoundingClientRect();
-    setImgPos({ top: parseInt(rect.top), left: parseInt(rect.left) });
+    setImgPos({ 
+      top: parseInt(rect.top), 
+      left: parseInt(rect.left),
+      height: rect.height,
+      width: rect.width,
+    });
   }
 
-  function handleDocClick() {
+  const handleDocClick = () => {
     if (!showDropdown) return;
     setShowDropdown(false);
   }
 
-  function handleImgClick(e) {
+  const handleImgClick = (e) => {
     setShowDropdown(!showDropdown);
     setMousePos({ top: e.pageY, left: e.pageX });
   }
 
-  async function handleLiClick(dbName, normalName) {
+  const handleLiClick = async (dbName, normalName) => {
     try {
-      const relMousePos = {
-        top: mousePos.top - imgPos.top,
-        left: mousePos.left - imgPos.left,
-      };
+      const located = await isCharacterLocated(dbName);
 
-      const character = await getPosition(db, dbName);
-
-
-      if (
-        relMousePos.top > character.yLower &&
-        relMousePos.top < character.yUpper &&
-        relMousePos.left > character.xLower &&
-        relMousePos.left < character.xUpper
-      ) {
+      if (located) {
         setMarkers((markers) => [
           ...markers,
           {
             dbName: dbName,
             normalName: normalName,
-            top: mousePos.top,
-            left: mousePos.left,
           },
         ]);
       }
     } catch (err) {
       console.log(err);
     }
+
+    const isCharacterLocated = async () => {
+      const relMousePos = {
+        top: (mousePos.top - imgPos.top) / imgPos.height,
+        left: (mousePos.left - imgPos.left) / imgPos.width,
+      };
+  
+      const character = await getPosition(db, dbName);
+  
+      if (
+        relMousePos.top > character.yLower &&
+        relMousePos.top < character.yUpper &&
+        relMousePos.left > character.xLower &&
+        relMousePos.left < character.xUpper
+      ) {
+        return true;
+      }
+    }
   }
 
-  async function submitBtnClick(name) {
-    const topTen = await updateTopTen(name, score);
+const submitBtnClick = async (name) => {
+  try {
+    await updateUserEntry(db, userID, name)
+    const topTen = await getTopTen(db);
     setTopTenScores(topTen);
-    setHighScoreForm(false);
+    setLeaderModal(true);
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+const handleShowLeaderboard = async () => {
+  if (!topTenScores) {
+    try {
+      const topTen = await getTopTen(db);
+      setTopTenScores(topTen);
+      setLeaderModal(true);
+    } catch (err) {
+      console.log(err);
+    }
+  } else {
     setLeaderModal(true);
   }
+}
 
   function closeLeaderModal() {
     setLeaderModal(false);
@@ -161,7 +176,7 @@ const Game = ({ db, toggleCounter, counter }) => {
           {highScoreForm ? (
             <HighScoreForm score={score} handler={submitBtnClick} />
           ) : (
-            <ShowLeaderboard handler={() => setLeaderModal(true)} />
+            <ShowLeaderboard handler={handleShowLeaderboard} />
           )}
         </div>
       </div>
