@@ -164,15 +164,24 @@ h3 {
   padding: 2% 0;
 }
 
-.game-wrap {
+.game-image-wrap {
   display: flex;
   justify-content: center;
+  padding: 0 2rem;
 }
 
-.image-container {
+.game-image-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   margin-bottom: 3%;
+  max-width: 1000px;
+}
+
+.game-image-container img {
+  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.705);
+  border-radius: 5px;
+  width: 100%;
 }
 
 .info {
@@ -187,12 +196,6 @@ h3 {
   background-color: #272932;
   padding: 1%;
   border-radius: 5px;
-}
-
-.image-container img {
-  box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.705);
-  border-radius: 5px;
-  width: 1000px;
 }
 
 .dropdown {
@@ -233,6 +236,10 @@ li:hover {
   background-color: #272932;
   padding: 5px;
   border-radius: 5px;
+}
+
+.character.inactive img {
+  filter: grayscale(100%);
 }
 
 li.inactive {
@@ -297,11 +304,11 @@ li.inactive {
   margin-right: 5%;
 }
 
-.background-modal {
+.bg-modal {
   background-color: rgba(0, 0, 0, 0.705);
   height: 100vh;
   width: 100vw;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   overflow: hidden;
@@ -316,6 +323,7 @@ li.inactive {
   background-color: white;
   width: 600px;
   padding: 3%;
+  cursor: auto;
 }
 
 .leaderboard-entry {

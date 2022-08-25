@@ -1,7 +1,6 @@
 import React from "react";
-import CharacterIcons from "./CharacterIcons";
 
-const StartScreen = ({ handleStartButton, isSignedIn }) => {
+const StartScreen = ({ handleStart, isSignedIn }) => {
   return (
     <div className="start-screen-wrap">
       <p>
@@ -11,7 +10,7 @@ const StartScreen = ({ handleStartButton, isSignedIn }) => {
       <button
         className="start-button"
         type="button"
-        onClick={() => handleStartButton()}
+        onClick={handleStart}
         disabled={!isSignedIn}
       >
         Start the clock!

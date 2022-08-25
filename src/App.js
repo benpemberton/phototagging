@@ -1,69 +1,76 @@
 import React, { useEffect, useState } from "react";
-import { initializeApp } from "firebase/app";
-import { getFirebaseConfig } from "./firebase-config";
-import { getFirestore, doc } from "firebase/firestore/lite";
-import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
-import {
-  cleanUserList
-} from "./firestoreCalls";
-import Header from "./Header";
-import StartScreen from "./StartScreen";
-import Game from "./Game";
+import firebaseSignIn from "./firebase/firebaseSignIn";
+import { cleanUserList } from "./firebase/firestoreCalls";
+import Header from "./components/Header";
+import StartScreen from "./components/StartScreen";
+import GameImage from "./components/GameImage";
+import LeaderModal from "./components/LeaderModal";
+import Footer from "./components/Footer";
+import { characterArray } from "./utils/characterArray";
 import "./app.css";
-
-const app = initializeApp(getFirebaseConfig());
-const db = getFirestore(app);
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
+  const [user, setUser] = useState({});
+  const [showStart, setShowStart] = useState(true);
   const [startGame, setStartGame] = useState(false);
-  const [counter, setCounter] = useState(0);
-  const [startCounter, setStartCounter] = useState(false);
+  const [characters, setCharacters] = useState(characterArray);
+  const [leaderModal, setLeaderModal] = useState(false);
+  const [topTenScores, setTopTenScores] = useState(null);
 
   useEffect(() => {
-    firebaseSignIn();
-    cleanUserList(db);
+    firebaseSignIn(setIsSignedIn);
+    cleanUserList();
   }, []);
 
-  useEffect(() => {
-    if (startCounter) {
-      const interval = setInterval(() => {
-        setCounter((counter) => counter + 10);
-      }, 10);
+  const handleStart = () => {
+    setUser({
+      start: Date.now(),
+    });
+    setShowStart(false);
+    setStartGame(true);
+  };
 
-      return () => clearInterval(interval);
-    }
-  }, [startCounter]);
-
-  useEffect(() => {
-  }, [counter]);
-
-  const firebaseSignIn = async () => {
-    const auth = getAuth();
-    signInAnonymously(auth).catch((err) => console.log(err));
-
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsSignedIn(true);
-      } else {
-        console.log("Firebase: no user signed in");
-      }
+  const handleEnd = async () => {
+    setStartGame(false);
+    setUser({
+      ...user,
+      end: Date.now(),
     });
   };
 
-  const toggleCounter = () => {
-    setStartCounter(!startCounter);
+  const handleRestart = () => {
+    setCharacters(characterArray);
+    setLeaderModal(false);
+    handleStart();
   };
 
   return (
     <div className="wrap">
-      <Header counter={counter} />
-      {startGame ? (
-        <Game db={db} toggleCounter={toggleCounter} counter={counter} />
+      <Header startGame={startGame} characters={characters} />
+
+      {showStart ? (
+        <StartScreen handleStart={handleStart} isSignedIn={isSignedIn} />
       ) : (
-        <StartScreen
-          handleStartButton={() => setStartGame(true)}
-          isSignedIn={isSignedIn}
+        <GameImage
+          characters={characters}
+          setCharacters={setCharacters}
+          handleEnd={handleEnd}
+        />
+      )}
+
+      <Footer
+        user={user}
+        topTenScores={topTenScores}
+        setTopTenScores={setTopTenScores}
+        setLeaderModal={setLeaderModal}
+        handleRestart={handleRestart}
+      />
+
+      {leaderModal && (
+        <LeaderModal
+          topTenScores={topTenScores}
+          setLeaderModal={setLeaderModal}
         />
       )}
     </div>
