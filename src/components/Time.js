@@ -1,33 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { msToMinsAndSecs } from "../utils/convertTime";
 
-const Time = ({ startGame }) => {
-  const [time, setTime] = useState("00:00");
+const Time = ({ startGame, user }) => {
   const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     let interval;
 
-    if (startGame) {
+    if (user.start && user.end) {
+      setCounter(user.end - user.start);
+    } else if (startGame && user.start) {
       setCounter(0);
 
       interval = setInterval(() => {
-        setCounter((counter) => counter + 10);
-      }, 10);
+        const diff = Date.now() - user.start;
+
+        setCounter(diff);
+      }, 500);
     }
 
     return () => clearInterval(interval);
   }, [startGame]);
 
-  useEffect(() => {
-    if (counter % 1000 === 0) {
-      setTime(msToMinsAndSecs(counter));
-    }
-  }, [counter]);
-
   return (
-    <div className="time">
-      <p>{time}</p>
+    <div className="time header-item">
+      <p>{msToMinsAndSecs(counter)}</p>
     </div>
   );
 };

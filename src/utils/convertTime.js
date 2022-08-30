@@ -14,7 +14,8 @@ const msToMinsSecsAndMs = (ms) => {
 
 const msToMinsAndSecs = (ms) => {
   let minutes = Math.floor(ms / 60000);
-  let seconds = ((ms % 60000) / 1000).toFixed(0);
+  let seconds = Math.floor((ms % 60000) / 1000);
+
   return (
     (minutes < 10 ? "0" : "") +
     minutes +

@@ -7,7 +7,7 @@ import igor from "../assets/igor.jpg";
 
 const CharacterIcons = ({ characters }) => {
   return (
-    <div className="character-icons">
+    <div className="character-icons header-item">
       <div className={`character ${checkIfFound(characters, "ridcully")}`}>
         <img src={ridcully} alt="Archchancellor Ridcully" />
         <p className="name">Ridcully</p>

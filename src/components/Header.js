@@ -2,11 +2,11 @@ import React from "react";
 import Time from "./Time";
 import CharacterIcons from "./CharacterIcons";
 
-const Header = ({ startGame, counter, setCounter, characters }) => {
+const Header = ({ startGame, user, characters }) => {
   return (
     <div className="header">
-      <Time startGame={startGame} counter={counter} setCounter={setCounter} />
-      <h1>Discworld Characters</h1>
+      <h1 className="header-item">Discworld Characters</h1>
+      <Time startGame={startGame} user={user} />
       <CharacterIcons characters={characters} />
     </div>
   );

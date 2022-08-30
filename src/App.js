@@ -47,7 +47,7 @@ const App = () => {
 
   return (
     <div className="wrap">
-      <Header startGame={startGame} characters={characters} />
+      <Header startGame={startGame} user={user} characters={characters} />
 
       {showStart ? (
         <StartScreen handleStart={handleStart} isSignedIn={isSignedIn} />
