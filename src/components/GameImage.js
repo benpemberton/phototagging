@@ -1,15 +1,22 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import discworldImage from "../assets/discworld-characters.jpg";
 import Dropdown from "./Dropdown";
+import CustomCursor from "./CustomCursor";
 import { getPosition } from "../firebase/firestoreCalls";
-import { checkIfAllFound } from "../utils/checkCharacters";
 
-const GameImage = ({ characters, setCharacters, handleEnd }) => {
-  const [showDropdown, setShowDropdown] = useState(false);
+const GameImage = ({ characters, setCharacters }) => {
   const [mousePos, setMousePos] = useState(null);
   const [imgPos, setImgPos] = useState(null);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [showCursor, setShowCursor] = useState(false);
 
   const imgRef = useRef();
+
+  useEffect(() => {
+    showDropdown
+      ? (imgRef.current.style.cursor = "auto")
+      : (imgRef.current.style.cursor = "none");
+  }, [showDropdown]);
 
   const handleDocClick = () => {
     if (showDropdown) setShowDropdown(false);
@@ -32,7 +39,7 @@ const GameImage = ({ characters, setCharacters, handleEnd }) => {
     setShowDropdown(!showDropdown);
   };
 
-  const handleLiClick = async (name) => {
+  const handleLiClick = async (e, name) => {
     try {
       const located = await isCharacterLocated(name);
 
@@ -42,12 +49,33 @@ const GameImage = ({ characters, setCharacters, handleEnd }) => {
         if (obj.name !== name) return obj;
         return { ...obj, found: true };
       });
+
       setCharacters(newArray);
 
-      checkIfAllFound(newArray) ? handleEnd() : null;
+      setMousePos({
+        top: e.nativeEvent.offsetY - imgPos.top,
+        left: e.nativeEvent.offsetX - imgPos.left,
+      });
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleMouseOver = () => {
+    setShowCursor(true);
+  };
+
+  const handleMouseOut = () => {
+    if (showDropdown) return;
+    setShowCursor(false);
+  };
+
+  const handleMouseMove = (e) => {
+    if (showDropdown) return;
+    setMousePos({
+      top: e.nativeEvent.offsetY,
+      left: e.nativeEvent.offsetX,
+    });
   };
 
   const isCharacterLocated = async (name) => {
@@ -75,8 +103,12 @@ const GameImage = ({ characters, setCharacters, handleEnd }) => {
           src={discworldImage}
           alt="A crowd of Discworld characters"
           onClick={handleImgClick}
+          onMouseOver={handleMouseOver}
+          onMouseOut={handleMouseOut}
+          onMouseMove={handleMouseMove}
           ref={imgRef}
         />
+        {showCursor && <CustomCursor {...mousePos} />}
         {showDropdown && (
           <Dropdown
             {...mousePos}

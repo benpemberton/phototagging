@@ -7,6 +7,7 @@ import GameImage from "./components/GameImage";
 import LeaderModal from "./components/LeaderModal";
 import Footer from "./components/Footer";
 import { characterArray } from "./utils/characterArray";
+import { checkIfAllFound } from "./utils/checkCharacters";
 import "./app.css";
 
 const App = () => {
@@ -22,6 +23,11 @@ const App = () => {
     firebaseSignIn(setIsSignedIn);
     cleanUserList();
   }, []);
+
+  useEffect(() => {
+    if (!checkIfAllFound(characters)) return;
+    handleEnd();
+  }, [characters]);
 
   const handleStart = () => {
     setUser({

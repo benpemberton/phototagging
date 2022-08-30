@@ -21,25 +21,25 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
       <ul>
         <li
           className={checkIfFound("samVimes")}
-          onClick={() => handleLiClick("samVimes")}
+          onClick={(e) => handleLiClick(e, "samVimes")}
         >
           Sam Vimes
         </li>
         <li
           className={checkIfFound("deathOfRats")}
-          onClick={() => handleLiClick("deathOfRats")}
+          onClick={(e) => handleLiClick(e, "deathOfRats")}
         >
           Death of Rats
         </li>
         <li
           className={checkIfFound("ridcully")}
-          onClick={() => handleLiClick("ridcully")}
+          onClick={(e) => handleLiClick(e, "ridcully")}
         >
           Ridcully
         </li>
         <li
           className={checkIfFound("igor")}
-          onClick={() => handleLiClick("igor")}
+          onClick={(e) => handleLiClick(e, "igor")}
         >
           Igor
         </li>

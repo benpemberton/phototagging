@@ -302,6 +302,7 @@ button:active {
 .game-image-container img {
   box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.305);
   width: 100%;
+  cursor: none;
 }
 
 .info {
@@ -472,4 +473,17 @@ li.inactive {
   padding: 1rem 2rem;
   background-color: #1b1b1b;
   color: #fff;
+}
+
+.cursor-outer {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px #000 dotted;
+  transform: translate(-50%, -50%);
+}
+
+.cursor-outer,
+.cursor-inner {
+  cursor: none;
+  pointer-events: none;
 }
