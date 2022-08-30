@@ -25,6 +25,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    console.log(user.end - user.start);
+  }, [user]);
+
+  useEffect(() => {
     if (!checkIfAllFound(characters)) return;
     handleEnd();
   }, [characters]);

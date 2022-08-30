@@ -476,14 +476,12 @@ li.inactive {
 }
 
 .cursor-outer {
+  cursor: none;
+  pointer-events: none;
   position: absolute;
+  top: 90%;
+  left: 50%;
   border-radius: 50%;
   border: 2px #000 dotted;
   transform: translate(-50%, -50%);
-}
-
-.cursor-outer,
-.cursor-inner {
-  cursor: none;
-  pointer-events: none;
 }

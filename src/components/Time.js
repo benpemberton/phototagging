@@ -20,7 +20,7 @@ const Time = ({ startGame, user }) => {
     }
 
     return () => clearInterval(interval);
-  }, [startGame]);
+  }, [startGame, user]);
 
   return (
     <div className="time header-item">
