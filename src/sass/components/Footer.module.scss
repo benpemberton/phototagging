@@ -1,0 +1,13 @@
+.root {
+grid-area: footer;
+display: flex;
+justify-content: center;
+align-items: center;
+padding: 1rem 2rem;
+background-color: #1b1b1b;
+color: #fff;
+
+    button {
+        background-color: #f05d5e;
+    }
+}

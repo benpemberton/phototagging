@@ -1,4 +1,5 @@
 import React from "react";
+import styles from '../sass/components/Dropdown.module'
 
 export default function Dropdown({ top, left, handleLiClick, characters }) {
   const dropdownPosition = {
@@ -17,7 +18,7 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
   }
 
   return (
-    <div className="dropdown" style={dropdownPosition}>
+    <div className={styles.root} style={dropdownPosition}>
       <ul>
         <li
           className={checkIfFound("samVimes")}

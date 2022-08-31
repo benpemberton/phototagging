@@ -8,7 +8,7 @@ import LeaderModal from "./components/LeaderModal";
 import Footer from "./components/Footer";
 import { characterArray } from "./utils/characterArray";
 import { checkIfAllFound } from "./utils/checkCharacters";
-import "./app.css";
+import styles from './sass/App.module'
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -56,7 +56,7 @@ const App = () => {
   };
 
   return (
-    <div className="wrap">
+    <div className={styles.root}>
       <Header startGame={startGame} user={user} characters={characters} />
 
       {showStart ? (

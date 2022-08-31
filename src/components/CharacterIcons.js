@@ -4,10 +4,11 @@ import ridcully from "../assets/ridcully.jpg";
 import samVimes from "../assets/sam-vimes.jpg";
 import deathOfRats from "../assets/death-of-rats.jpg";
 import igor from "../assets/igor.jpg";
+import styles from '../sass/components/CharacterIcons.module'
 
 const CharacterIcons = ({ characters }) => {
   return (
-    <div className="character-icons header-item">
+    <div className={`${styles.root} header-item`}>
       <div className={`character ${checkIfFound(characters, "ridcully")}`}>
         <img src={ridcully} alt="Archchancellor Ridcully" />
         <p className="name">Ridcully</p>

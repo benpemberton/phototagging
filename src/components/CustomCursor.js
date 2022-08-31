@@ -1,14 +1,13 @@
 import React from "react";
+import styles from '../sass/components/CustomCursor.module'
 
 const CustomCursor = ({ top, left }) => {
-  const cursorStyle = {
+  const cursorPosition = {
     top: top + "px",
     left: left + "px",
-    height: "30px",
-    width: "30px",
   };
 
-  return <div className="cursor-outer" style={cursorStyle}></div>;
+  return <div className={styles.root} style={cursorPosition}></div>;
 };
 
 export default CustomCursor;

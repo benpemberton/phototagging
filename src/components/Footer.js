@@ -6,6 +6,7 @@ import {
 } from "../firebase/firestoreCalls";
 import ShowLeaderboard from "./ShowLeaderboard";
 import ScoreForm from "./ScoreForm";
+import styles from '../sass/components/Footer.module'
 
 const Footer = ({
   user,
@@ -62,19 +63,17 @@ const Footer = ({
   };
 
   return (
-    <div className="footer">
-      <div className="scores-area">
-        {scoreForm ? (
-          <ScoreForm
-            score={score}
-            handleSubmitButton={handleSubmitButton}
-            handleRestart={handleRestart}
-            isHighScore={isHighScore}
-          />
-        ) : (
-          <ShowLeaderboard handleShowLeaderboard={handleShowLeaderboard} />
-        )}
-      </div>
+    <div className={styles.root}>
+      {scoreForm ? (
+        <ScoreForm
+          score={score}
+          handleSubmitButton={handleSubmitButton}
+          handleRestart={handleRestart}
+          isHighScore={isHighScore}
+        />
+      ) : (
+        <ShowLeaderboard handleShowLeaderboard={handleShowLeaderboard} />
+      )}
     </div>
   );
 };

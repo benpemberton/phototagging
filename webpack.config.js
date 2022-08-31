@@ -4,15 +4,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = () => {
-  let isProduction;
-  process.env.NODE_ENV === "production"
-    ? (isProduction = true)
-    : (isProduction = false);
+  let isDevelopment = process.env.NODE_ENV === "development";
 
   return {
-    mode: isProduction ? "production" : "development",
+    mode: isDevelopment ? "development" : "production",
     entry: "./src/index.js",
-    devtool: isProduction ? false : "inline-source-map",
+    devtool: isDevelopment? "inline-source-map": false,
     devServer: {
       port: 3010,
       open: true,
@@ -38,13 +35,27 @@ module.exports = () => {
           include: path.resolve(__dirname, "src"),
           sideEffects: true,
           use: [
-            isProduction
-              ? {
-                  loader: MiniCssExtractPlugin.loader,
+            isDevelopment
+              ? 
+              "style-loader" : 
+              {
+                loader: MiniCssExtractPlugin.loader,
+              },
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: {
+                    localIdentName: isDevelopment? "[name]__[local]" : "[hash:base64:5]",
+                    exportLocalsConvention: 'dashes',
+                  }
                 }
-              : "style-loader",
-            "css-loader",
-            "sass-loader",
+              },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: isDevelopment,
+              }
+            }
           ],
         },
         {
@@ -66,7 +77,7 @@ module.exports = () => {
       ],
     },
     resolve: {
-      extensions: [".js", ".jsx"],
+      extensions: [".js", ".jsx", ".scss"],
     },
   };
 };

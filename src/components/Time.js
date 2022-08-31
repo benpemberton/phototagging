@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { msToMinsAndSecs } from "../utils/convertTime";
+import styles from '../sass/components/Time.module'
 
 const Time = ({ startGame, user }) => {
   const [counter, setCounter] = useState(0);
@@ -23,7 +24,7 @@ const Time = ({ startGame, user }) => {
   }, [startGame, user]);
 
   return (
-    <div className="time header-item">
+    <div className={styles.root}>
       <p>{msToMinsAndSecs(counter)}</p>
     </div>
   );

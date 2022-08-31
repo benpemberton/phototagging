@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import { msToMinsSecsAndMs } from "../utils/convertTime";
+import styles from '../sass/components/ScoreForm.module'
 
 export default function ScoreForm({
   score,
@@ -20,7 +21,7 @@ export default function ScoreForm({
   }
 
   return (
-    <>
+    <div className={styles.root}>
       {isHighScore ? (
         <div className="high-score-form">
           <h3> You made the top ten!</h3>
@@ -45,6 +46,6 @@ export default function ScoreForm({
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
