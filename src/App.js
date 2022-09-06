@@ -7,8 +7,7 @@ import GameImage from "./components/GameImage";
 import LeaderModal from "./components/LeaderModal";
 import Footer from "./components/Footer";
 import { characterArray } from "./utils/characterArray";
-import { checkIfAllFound } from "./utils/checkCharacters";
-import styles from './sass/App.module'
+import styles from "./sass/App.module";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -23,10 +22,6 @@ const App = () => {
     firebaseSignIn(setIsSignedIn);
     cleanUserList();
   }, []);
-
-  useEffect(() => {
-    console.log(user.end - user.start);
-  }, [user]);
 
   useEffect(() => {
     if (!checkIfAllFound(characters)) return;
@@ -53,6 +48,10 @@ const App = () => {
     setCharacters(characterArray);
     setLeaderModal(false);
     handleStart();
+  };
+
+  const checkIfAllFound = (characters) => {
+    return characters.every((character) => character.found);
   };
 
   return (

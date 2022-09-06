@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { msToMinsSecsAndMs } from "../utils/convertTime";
-import styles from '../sass/components/ScoreForm.module'
+import styles from "../sass/components/ScoreForm.module";
 
 export default function ScoreForm({
   score,
@@ -23,25 +23,25 @@ export default function ScoreForm({
   return (
     <div className={styles.root}>
       {isHighScore ? (
-        <div className="high-score-form">
+        <div className={styles.highScoreForm}>
           <h3> You made the top ten!</h3>
           <p>Your time was {msToMinsSecsAndMs(score)} seconds.</p>
           <form>
             <input
               type="text"
-              className="name-input"
+              className={styles.nameInput}
               placeholder="Enter your name..."
               ref={inputRef}
             ></input>
-            <button className="score-submit-btn" onClick={handleClick}>
+            <button className={styles.scoresSubmitButton} onClick={handleClick}>
               Submit
             </button>
           </form>
         </div>
       ) : (
-        <div className="final-score">
+        <div className={styles.finalScore}>
           <p>Your time was {msToMinsSecsAndMs(score)} seconds.</p>
-          <button className="restart" onClick={handleRestart}>
+          <button className={styles.restart} onClick={handleRestart}>
             Restart
           </button>
         </div>

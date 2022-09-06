@@ -70,8 +70,6 @@ const getTopTen = async () => {
     return a.score - b.score;
   });
 
-  console.log(array.slice(0, 10));
-
   return array.slice(0, 10);
 };
 

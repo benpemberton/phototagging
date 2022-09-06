@@ -3,7 +3,7 @@ import discworldImage from "../assets/discworld-characters.jpg";
 import Dropdown from "./Dropdown";
 import CustomCursor from "./CustomCursor";
 import { getPosition } from "../firebase/firestoreCalls";
-import styles from '../sass/components/GameImage.module'
+import styles from "../sass/components/GameImage.module";
 
 const GameImage = ({ characters, setCharacters }) => {
   const [mousePos, setMousePos] = useState(null);
@@ -98,8 +98,8 @@ const GameImage = ({ characters, setCharacters }) => {
   };
 
   return (
-    <div className={`${styles.root} main-content-wrap`} onClick={handleDocClick}>
-      <div className="game-image-container">
+    <div className={styles.root} onClick={handleDocClick}>
+      <div className={styles.gameImageContainer}>
         <img
           src={discworldImage}
           alt="A crowd of Discworld characters"

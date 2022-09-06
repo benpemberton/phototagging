@@ -1,71 +1,65 @@
 .root {
-    .bg-modal {
-        background-color: rgba(0, 0, 0, 0.705);
-        height: 100vh;
-        width: 100vw;
-        top: 0;
-        position: fixed;
+  .bg-modal {
+    background-color: rgba(0, 0, 0, 0.705);
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    position: fixed;
+    overflow: hidden;
+    cursor: pointer;
+
+    .leader-modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      width: 30vw;
+      min-width: 300px;
+      cursor: auto;
+      overflow: hidden;
+      border-radius: 15px;
+
+      .leaderboard-entry {
+        display: flex;
+        align-items: baseline;
+        padding: 0.5rem 0;
+        color: #000;
+        white-space: nowrap;
         overflow: hidden;
-        cursor: pointer;
-        
-        .leader-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            width: 30vw;
-            cursor: auto;
-            overflow: hidden;
-            border-radius: 15px;
-    
-        
-            .leaderboard-entry {
-                display: flex;
-                align-items: baseline;
-                padding: 0.5rem 0;
-                color: #000;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            
-                &:nth-child(even) {
-                    background-color: #dddddd;
-                }
-                
-                &:last-child {
-                    margin-bottom: 0;
-                }
-                
-                span {
-                    font-size: 1.8em;
-                    margin-left: 2%;
-                }
-                
-                .user {
-                    font-size: 1.1em;
-                    margin-left: 2%;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;
-                }
-            }
+        text-overflow: ellipsis;
+
+        &:nth-child(even) {
+          background-color: #dddddd;
         }
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        span {
+          font-size: 1.8em;
+          margin-left: 2%;
+        }
+
+        .user {
+          font-size: 1.1em;
+          margin-left: 2%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
+  }
 }
 
-
-    
-    
-    
-    .fa-xmark {
-    width: 30px;
-    height: 30px;
-    color: #f05d5e;
-    position: absolute;
-    top: -30px;
-    right: -30px;
-    cursor: pointer;
-    }
-
-
+.fa-xmark {
+  width: 30px;
+  height: 30px;
+  color: #f05d5e;
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  cursor: pointer;
+}

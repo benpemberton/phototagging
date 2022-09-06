@@ -1,5 +1,5 @@
 import React from "react";
-import styles from '../sass/components/Dropdown.module'
+import styles from "../sass/components/Dropdown.module";
 
 export default function Dropdown({ top, left, handleLiClick, characters }) {
   const dropdownPosition = {
@@ -13,7 +13,7 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
         return character.name === name && character.found;
       })
     ) {
-      return "inactive";
+      return true;
     }
   }
 
@@ -21,25 +21,25 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
     <div className={styles.root} style={dropdownPosition}>
       <ul>
         <li
-          className={checkIfFound("samVimes")}
+          className={checkIfFound("samVimes") ? styles.inactive : null}
           onClick={(e) => handleLiClick(e, "samVimes")}
         >
           Sam Vimes
         </li>
         <li
-          className={checkIfFound("deathOfRats")}
+          className={checkIfFound("deathOfRats") ? styles.inactive : null}
           onClick={(e) => handleLiClick(e, "deathOfRats")}
         >
           Death of Rats
         </li>
         <li
-          className={checkIfFound("ridcully")}
+          className={checkIfFound("ridcully") ? styles.inactive : null}
           onClick={(e) => handleLiClick(e, "ridcully")}
         >
           Ridcully
         </li>
         <li
-          className={checkIfFound("igor")}
+          className={checkIfFound("igor") ? styles.inactive : null}
           onClick={(e) => handleLiClick(e, "igor")}
         >
           Igor

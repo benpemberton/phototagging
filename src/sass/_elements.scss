@@ -64,15 +64,20 @@ button {
   &:disabled {
     pointer-events: none;
   }
-  
+
   &:hover {
     box-shadow: rgba(0, 0, 0, 0.25) 0 8px 10px;
     transform: translateY(-1px);
   }
-  
+
   &:active {
     box-shadow: none;
     transform: translateY(0);
   }
 }
 
+@media (max-width: 800px) {
+  html {
+    font-size: 13px;
+  }
+}
