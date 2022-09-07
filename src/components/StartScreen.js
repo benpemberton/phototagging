@@ -1,6 +1,5 @@
-import React from "react";
 import Discworld from "../assets/the-discworld.jpg";
-import styles from '../sass/components/StartScreen.module'
+import styles from "../sass/components/StartScreen.module";
 
 const StartScreen = ({ handleStart, isSignedIn }) => {
   return (
@@ -12,10 +11,7 @@ const StartScreen = ({ handleStart, isSignedIn }) => {
         Find and select the four Discworld characters in the fastest possible
         time.
       </p>
-      <button
-        onClick={handleStart}
-        disabled={!isSignedIn}
-      >
+      <button onClick={handleStart} disabled={!isSignedIn}>
         Start the clock!
       </button>
     </div>

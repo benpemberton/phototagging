@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { msToMinsAndSecs } from "../utils/convertTime";
-import styles from '../sass/components/Time.module'
+import styles from "../sass/components/Time.module";
 
 const Time = ({ startGame, user }) => {
   const [counter, setCounter] = useState(0);

@@ -1,16 +1,16 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { msToMinsSecsAndMs } from "../utils/convertTime";
 import styles from "../sass/components/ScoreForm.module";
 
-export default function ScoreForm({
+const ScoreForm = ({
   score,
   handleSubmitButton,
   handleRestart,
   isHighScore,
-}) {
+}) => {
   const inputRef = useRef();
 
-  function handleClick(e) {
+  const handleClick = (e) => {
     e.preventDefault();
     const input = inputRef.current;
     if (input.value === "") {
@@ -18,7 +18,7 @@ export default function ScoreForm({
     } else {
       handleSubmitButton(input.value);
     }
-  }
+  };
 
   return (
     <div className={styles.root}>
@@ -48,4 +48,6 @@ export default function ScoreForm({
       )}
     </div>
   );
-}
+};
+
+export default ScoreForm;

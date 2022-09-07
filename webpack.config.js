@@ -9,7 +9,7 @@ module.exports = () => {
   return {
     mode: isDevelopment ? "development" : "production",
     entry: "./src/index.js",
-    devtool: isDevelopment? "inline-source-map": false,
+    devtool: isDevelopment ? "inline-source-map" : false,
     devServer: {
       port: 3010,
       open: true,
@@ -36,26 +36,27 @@ module.exports = () => {
           sideEffects: true,
           use: [
             isDevelopment
-              ? 
-              "style-loader" : 
-              {
-                loader: MiniCssExtractPlugin.loader,
-              },
-              {
-                loader: 'css-loader',
-                options: {
-                  modules: {
-                    localIdentName: isDevelopment? "[name]__[local]" : "[hash:base64:5]",
-                    exportLocalsConvention: 'dashes',
-                  }
-                }
-              },
+              ? "style-loader"
+              : {
+                  loader: MiniCssExtractPlugin.loader,
+                },
             {
-              loader: 'sass-loader',
+              loader: "css-loader",
+              options: {
+                modules: {
+                  localIdentName: isDevelopment
+                    ? "[name]__[local]"
+                    : "[hash:base64:5]",
+                  exportLocalsConvention: "dashes",
+                },
+              },
+            },
+            {
+              loader: "sass-loader",
               options: {
                 sourceMap: isDevelopment,
-              }
-            }
+              },
+            },
           ],
         },
         {
@@ -70,7 +71,15 @@ module.exports = () => {
             options: {
               cacheDirectory: true,
               cacheCompression: false,
-              presets: ["@babel/preset-env", "@babel/preset-react"],
+              presets: [
+                "@babel/preset-env",
+                [
+                  "@babel/preset-react",
+                  {
+                    runtime: "automatic",
+                  },
+                ],
+              ],
             },
           },
         },

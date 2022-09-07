@@ -1,9 +1,9 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { msToMinsSecsAndMs } from "../utils/convertTime";
 import uniqid from "uniqid";
 import styles from "../sass/components/LeaderModal.module";
 
-export default function LeaderModal({ topTenScores, setLeaderModal }) {
+const LeaderModal = ({ topTenScores, setLeaderModal }) => {
   const leaderRef = useRef();
 
   const closeModal = (e) => {
@@ -28,4 +28,6 @@ export default function LeaderModal({ topTenScores, setLeaderModal }) {
       </div>
     </div>
   );
-}
+};
+
+export default LeaderModal;

@@ -1,5 +1,4 @@
-import React from "react";
-import styles from '../sass/components/CustomCursor.module'
+import styles from "../sass/components/CustomCursor.module";
 
 const CustomCursor = ({ top, left }) => {
   const cursorPosition = {

@@ -1,13 +1,12 @@
-import React from "react";
 import styles from "../sass/components/Dropdown.module";
 
-export default function Dropdown({ top, left, handleLiClick, characters }) {
+const Dropdown = ({ top, left, handleLiClick, characters }) => {
   const dropdownPosition = {
     top: top + "px",
     left: left + 10 + "px",
   };
 
-  function checkIfFound(name) {
+  const checkIfFound = (name) => {
     if (
       characters.some((character) => {
         return character.name === name && character.found;
@@ -15,7 +14,7 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
     ) {
       return true;
     }
-  }
+  };
 
   return (
     <div className={styles.root} style={dropdownPosition}>
@@ -47,4 +46,6 @@ export default function Dropdown({ top, left, handleLiClick, characters }) {
       </ul>
     </div>
   );
-}
+};
+
+export default Dropdown;

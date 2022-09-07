@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import discworldImage from "../assets/discworld-characters.jpg";
 import Dropdown from "./Dropdown";
 import CustomCursor from "./CustomCursor";

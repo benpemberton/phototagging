@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   getTopTen,
   isInTopTen,
@@ -6,7 +6,7 @@ import {
 } from "../firebase/firestoreCalls";
 import ShowLeaderboard from "./ShowLeaderboard";
 import ScoreForm from "./ScoreForm";
-import styles from '../sass/components/Footer.module'
+import styles from "../sass/components/Footer.module";
 
 const Footer = ({
   user,

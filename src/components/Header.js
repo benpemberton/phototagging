@@ -1,7 +1,6 @@
-import React from "react";
 import Time from "./Time";
 import CharacterIcons from "./CharacterIcons";
-import styles from '../sass/components/Header.module'
+import styles from "../sass/components/Header.module";
 
 const Header = ({ startGame, user, characters }) => {
   return (

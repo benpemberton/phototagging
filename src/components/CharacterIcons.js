@@ -1,4 +1,3 @@
-import React from "react";
 import ridcully from "../assets/ridcully.jpg";
 import samVimes from "../assets/sam-vimes.jpg";
 import deathOfRats from "../assets/death-of-rats.jpg";
@@ -6,7 +5,7 @@ import igor from "../assets/igor.jpg";
 import styles from "../sass/components/CharacterIcons.module";
 
 const CharacterIcons = ({ characters }) => {
-  function checkIfFound(name) {
+  const checkIfFound = (name) => {
     if (
       characters.some((character) => {
         return character.name === name && character.found;
@@ -14,13 +13,13 @@ const CharacterIcons = ({ characters }) => {
     ) {
       return true;
     }
-  }
+  };
 
-  function getClassNames(name) {
+  const getClassNames = (name) => {
     if (!checkIfFound(name)) return styles.character;
 
     return `${styles.character} ${styles.inactive}`;
-  }
+  };
 
   return (
     <div className={`${styles.root} header-item`}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import firebaseSignIn from "./firebase/firebaseSignIn";
 import { cleanUserList } from "./firebase/firestoreCalls";
 import Header from "./components/Header";

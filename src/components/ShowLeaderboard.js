@@ -1,5 +1,5 @@
-import React from "react";
-
-export default function ShowLeaderboard({ handleShowLeaderboard }) {
+const ShowLeaderboard = ({ handleShowLeaderboard }) => {
   return <button onClick={handleShowLeaderboard}>Show leaderboard</button>;
-}
+};
+
+export default ShowLeaderboard;
