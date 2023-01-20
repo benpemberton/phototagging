@@ -1,0 +1,23 @@
+.root {
+  justify-content: end;
+  display: flex;
+  gap: 1rem;
+
+  .character {
+    text-align: center;
+
+    img {
+      transition: all 0.2s ease-out;
+      width: 4.5rem;
+    }
+
+    &.inactive img {
+      transform: scale(0.7);
+      filter: grayscale(100%);
+    }
+
+    p {
+      font-size: 0.75rem;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.root {
+  grid-area: header;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  background-color: #1b1b1b;
+  color: #fff;
+  position: relative;
+
+  h1 {
+    justify-content: start;
+    font-family: "Redressed";
+    font-size: 4rem;
+    font-weight: 500;
+  }
+}
+
+:global {
+  .header-item {
+    flex: 1;
+    display: flex;
+  }
+}
