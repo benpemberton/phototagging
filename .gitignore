@@ -9,6 +9,8 @@
 /coverage
 
 # production
+.env
+
 
 # misc
 .DS_Store

@@ -7,12 +7,12 @@
  * 4. Copy the config object snippet, then add it here.
  */
 const config = {
-  apiKey: "AIzaSyDwepcaszd99DSmBOS8uVAr7AYwy0gF_Bw",
-  authDomain: "photo-tagging-d6f44.firebaseapp.com",
-  projectId: "photo-tagging-d6f44",
-  storageBucket: "photo-tagging-d6f44.appspot.com",
-  messagingSenderId: "978683866319",
-  appId: "1:978683866319:web:0c14c957d9fa8190929bba",
+  apiKey: process.env.REACT_APP_API_KEY,
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_APP_ID,
 };
 
 export function getFirebaseConfig() {

@@ -15,8 +15,13 @@ const app = initializeApp(getFirebaseConfig());
 const db = getFirestore(app);
 
 async function cleanUserList() {
-  const colRef = collection(db, "users");
-  const users = await getDocs(colRef);
+  // const colRef = collection(db, "users");
+  // console.log(colRef);
+  // const users = await getDocs(colRef);
+
+  const users = await getDocs(collection(db, "users"));
+
+  console.log(users);
 
   let deleteList = [];
 
@@ -121,18 +126,22 @@ async function updateTopTen(name, score) {
 }
 
 async function getPosition(name) {
-  const colRef = collection(db, "characterPositions");
-  const docs = await getDocs(colRef);
+  try {
+    const colRef = collection(db, "characterPositions");
+    const docs = await getDocs(colRef);
 
-  let character;
+    let character;
 
-  docs.forEach((doc) => {
-    if (doc.id === name) {
-      character = doc.data();
-    }
-  });
+    docs.forEach((doc) => {
+      if (doc.id === name) {
+        character = doc.data();
+      }
+    });
 
-  return character;
+    return character;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 export {

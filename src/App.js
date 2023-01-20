@@ -55,12 +55,16 @@ function App() {
   }, [score]);
 
   async function startOfGame() {
-    await cleanUserList();
-    const id = await setStartTime();
-    setUserID(id);
-    const dbTopTen = await getTopTen();
-    const topTenArray = await createArray(dbTopTen);
-    setTopTenScores(topTenArray);
+    try {
+      await cleanUserList();
+      const id = await setStartTime();
+      setUserID(id);
+      const dbTopTen = await getTopTen();
+      const topTenArray = await createArray(dbTopTen);
+      setTopTenScores(topTenArray);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async function endOfGame() {
@@ -108,28 +112,32 @@ function App() {
   }
 
   async function handleLiClick(dbName, normalName) {
-    const relMousePos = {
-      top: mousePos.top - imgPos.top,
-      left: mousePos.left - imgPos.left,
-    };
+    try {
+      const relMousePos = {
+        top: mousePos.top - imgPos.top,
+        left: mousePos.left - imgPos.left,
+      };
 
-    const character = await getPosition(dbName);
+      const character = await getPosition(dbName);
 
-    if (
-      relMousePos.top > character.yLower &&
-      relMousePos.top < character.yUpper &&
-      relMousePos.left > character.xLower &&
-      relMousePos.left < character.xUpper
-    ) {
-      setMarkers((markers) => [
-        ...markers,
-        {
-          dbName: dbName,
-          normalName: normalName,
-          top: mousePos.top,
-          left: mousePos.left,
-        },
-      ]);
+      if (
+        relMousePos.top > character.yLower &&
+        relMousePos.top < character.yUpper &&
+        relMousePos.left > character.xLower &&
+        relMousePos.left < character.xUpper
+      ) {
+        setMarkers((markers) => [
+          ...markers,
+          {
+            dbName: dbName,
+            normalName: normalName,
+            top: mousePos.top,
+            left: mousePos.left,
+          },
+        ]);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
