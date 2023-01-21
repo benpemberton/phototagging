@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import firebaseSignIn from "./firebase/firebaseSignIn";
-import { cleanUserList } from "./firebase/firestoreCalls";
-import Header from "./components/Header";
-import StartScreen from "./components/StartScreen";
-import GameImage from "./components/GameImage";
-import LeaderModal from "./components/LeaderModal";
-import Footer from "./components/Footer";
-import { characterArray } from "./utils/characterArray";
-import styles from "./sass/App.module";
+import firebaseSignIn from "../firebase/firebaseSignIn";
+import { cleanUserList } from "../firebase/firestoreCalls";
+import Header from "./Header";
+import StartScreen from "./StartScreen";
+import GameImage from "./GameImage";
+import LeaderModal from "./LeaderModal";
+import Footer from "./Footer";
+import { characterArray } from "../utils/characterArray";
+import styles from "../sass/App.module";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);

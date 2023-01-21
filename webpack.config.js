@@ -24,8 +24,9 @@ module.exports = () => {
       new Dotenv(),
     ],
     output: {
-      filename: "main.js",
+      filename: "[name].bundle.js",
       path: path.resolve(__dirname, "dist"),
+      assetModuleFilename: "images/[hash][ext][query]",
       clean: true,
     },
     module: {
@@ -84,6 +85,11 @@ module.exports = () => {
           },
         },
       ],
+    },
+    optimization: {
+      splitChunks: {
+        chunks: "all",
+      },
     },
     resolve: {
       extensions: [".js", ".jsx", ".scss"],
